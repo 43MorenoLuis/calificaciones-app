@@ -5,16 +5,16 @@ const cloudinary = require('cloudinary').v2;
 cloudinary.config( process.env.CLOUDINARY_URL );
 
 const { response } = require('express');
-const { subirArchivo } = require('../helpers');
-const { Usuario, Producto } = require('../models');
+const { uploadFile } = require('../helpers');
+const { User, Product } = require('../models');
 
 const cargarArchivo = async( req, res = response ) => {
 
     // Imagenes
-    const nombre = await subirArchivo( req.files, undefined, 'imgs' );
+    const name = await uploadFile( req.files, undefined, 'imgs' );
 
     res.json({
-        nombre
+        name
     })
 }
 
@@ -24,8 +24,8 @@ const actualizarImagen = async( req, res = response ) => {
     let modelo;
 
     switch ( coleccion ) {
-        case 'usuarios':
-            modelo = await Usuario.findById(id);
+        case 'users':
+            modelo = await User.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un usuario con el id ${ id }`
@@ -34,8 +34,8 @@ const actualizarImagen = async( req, res = response ) => {
             
         break;
 
-        case 'productos':
-            modelo = await Producto.findById(id);
+        case 'products':
+            modelo = await Product.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un producto con el id ${ id }`
@@ -59,7 +59,7 @@ const actualizarImagen = async( req, res = response ) => {
         }
     }
 
-    const nombre = await subirArchivo( req.files, undefined, coleccion );
+    const nombre = await uploadFile( req.files, undefined, coleccion );
     modelo.img = nombre;
 
     await modelo.save();
@@ -76,8 +76,8 @@ const actualizarImagenCloudinary = async( req, res = response ) => {
     let modelo;
 
     switch ( coleccion ) {
-        case 'usuarios':
-            modelo = await Usuario.findById(id);
+        case 'users':
+            modelo = await User.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un usuario con el id ${ id }`
@@ -86,8 +86,8 @@ const actualizarImagenCloudinary = async( req, res = response ) => {
             
         break;
 
-        case 'productos':
-            modelo = await Producto.findById(id);
+        case 'products':
+            modelo = await Product.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un producto con el id ${ id }`
@@ -110,7 +110,7 @@ const actualizarImagenCloudinary = async( req, res = response ) => {
         cloudinary.uploader.destroy( public_id );
     }
 
-    const { tempFilePath } = req.files.archivo;
+    const { tempFilePath } = req.files.file;
     const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
     modelo.img = secure_url;
 
@@ -125,8 +125,8 @@ const mostrarImagen = async( req, res = response ) => {
     let modelo;
 
     switch ( coleccion ) {
-        case 'usuarios':
-            modelo = await Usuario.findById(id);
+        case 'users':
+            modelo = await User.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un usuario con el id ${ id }`
@@ -135,8 +135,8 @@ const mostrarImagen = async( req, res = response ) => {
             
         break;
 
-        case 'productos':
-            modelo = await Producto.findById(id);
+        case 'products':
+            modelo = await Product.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un producto con el id ${ id }`
@@ -169,8 +169,8 @@ const mostrarImagenCloudinary = async( req, res = response ) => {
     let modelo;
 
     switch ( coleccion ) {
-        case 'usuarios':
-            modelo = await Usuario.findById(id);
+        case 'users':
+            modelo = await User.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un usuario con el id ${ id }`
@@ -179,8 +179,8 @@ const mostrarImagenCloudinary = async( req, res = response ) => {
             
         break;
 
-        case 'productos':
-            modelo = await Producto.findById(id);
+        case 'products':
+            modelo = await Product.findById(id);
             if( !modelo ){
                 return res.status(400).json({
                     msg: `No existe un producto con el id ${ id }`

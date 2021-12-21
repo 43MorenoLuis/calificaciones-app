@@ -1,32 +1,32 @@
 const bcryptjs = require('bcryptjs');
 const { response } = require('express');
-const { generarJWT } = require('../helpers/generar-jwt');
+const { generateJWT } = require('../helpers/generate-jwt');
 const { googleVerify } = require('../helpers/google-verify');
-const Usuario = require('../models/usuario');
+const { User } = require('../models');
 
 const login = async(req, res = response ) => {
 
-    const { correo, password } = req.body;
+    const { email, password } = req.body;
     
     try {
 
         // Verificar si el email existe
-        const usuario = await Usuario.findOne({ correo });
-        if( !usuario ){
+        const user = await User.findOne({ email });
+        if( !user ){
             return res.status(400).json({
                 msg: 'Usuario / Password son incorrectos'
             });
         }; 
 
         // Si el usuario esta activo
-        if( !usuario.estado ){
+        if( !user.state ){
             return res.status(400).json({
                 msg: 'Usuario / Password son incorrectos'
             });
         };
 
         // Verificar la contraseña
-        const validPassword = bcryptjs.compareSync( password, usuario.password );
+        const validPassword = bcryptjs.compareSync( password, user.password );
         if( !validPassword ){
             return res.status(400).json({
                 msg: 'Usuario / Password son incorrectos'
@@ -34,10 +34,10 @@ const login = async(req, res = response ) => {
         };
 
         // Generar el JWT
-        const token = await generarJWT( usuario.id );
+        const token = await generateJWT( user.id );
 
         res.json({
-            usuario,
+            user,
             token
         });
         
@@ -55,36 +55,36 @@ const googleSignIn = async( req, res = response ) => {
 
     try {
 
-        const { nombre, img, correo } = await googleVerify( id_token );
+        const { name, img, email } = await googleVerify( id_token );
 
-        let usuario = await Usuario.findOne({ correo });
+        let user = await User.findOne({ email });
 
-        if( !usuario ){
+        if( !user ){
             // Tengo que crearlo
             const data = {
-                nombre,
-                correo,
+                name,
+                email,
                 password: ':p',
                 img,
                 google: true
             };
 
-            usuario = new Usuario( data );
-            await usuario.save();
+            user = new User( data );
+            await user.save();
         }
 
         // Si el usuario existe en DB
-        if( !usuario.estado ){
+        if( !user.state ){
             return res.status(401).json({
                 msg: 'Hable con el administrador, usuario bloqueado'
             });
         }
 
         // Generar el JWT
-        const token = await generarJWT( usuario.id );
+        const token = await generateJWT( user.id );
 
         res.json({
-            usuario,
+            user,
             token
         });
     } catch (error) {

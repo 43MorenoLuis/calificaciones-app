@@ -1,11 +1,11 @@
 const { response } = require('express');
 const { ObjectId } = require('mongoose').Types;
-const { Usuario, Categoria, Producto } = require('../models');
+const { User, Category, Product } = require('../models');
 
 const coleccionesPermitidas = [
-    'usuario',
-    'categoria',
-    'producto',
+    'user',
+    'category',
+    'product',
     'role'
 ];
 
@@ -14,20 +14,20 @@ const buscarUsuarios = async( termino = '', res = response ) => {
     const esMongoID = ObjectId.isValid( termino );
 
     if( esMongoID ){
-        const usuario = await Usuario.findById( termino );
+        const user = await User.findById( termino );
         res.json({
-            results: ( usuario ) ? [ usuario ] : []
+            results: ( user ) ? [ user ] : []
         });
     }
 
     const regex = new RegExp( termino, 'i');
-    const usuarios = await Usuario.find({ 
-        $or: [{ nombre: regex }, { correo: regex }],
-        $and: [{ estado: true }]
+    const users = await User.find({ 
+        $or: [{ name: regex }, { email: regex }],
+        $and: [{ state: true }]
      });
 
     res.json({
-        results: usuarios
+        results: users
     });
 }
 
@@ -36,17 +36,17 @@ const buscarCategorias = async( termino = '', res = response ) => {
     const esMongoID = ObjectId.isValid( termino );
 
     if( esMongoID ){
-        const categoria = await Categoria.findById( termino );
+        const category = await Category.findById( termino );
         res.json({
-            results: ( categoria ) ? [ categoria ] : []
+            results: ( category ) ? [ category ] : []
         });
     }
 
     const regex = new RegExp( termino, 'i');
-    const categorias = await Categoria.find({ nombre: regex, estado: true });
+    const categories = await Category.find({ name: regex, state: true });
 
     res.json({
-        results: categorias
+        results: categories
     });
 }
 
@@ -55,17 +55,17 @@ const buscarProductos = async( termino = '', res = response ) => {
     const esMongoID = ObjectId.isValid( termino );
 
     if( esMongoID ){
-        const producto = await Producto.findById( termino );
+        const product = await Product.findById( termino );
         res.json({
-            results: ( producto ) ? [ producto ] : []
+            results: ( product ) ? [ product ] : []
         });
     }
 
     const regex = new RegExp( termino, 'i');
-    const productos = await Producto.find({ nombre: regex, estado: true });
+    const products = await Product.find({ name: regex, state: true });
 
     res.json({
-        results: productos
+        results: products
     });
 }
 
@@ -80,13 +80,13 @@ const buscar = ( req, res = response ) => {
     }
 
     switch ( coleccion ) {
-        case 'usuarios':
+        case 'users':
             buscarUsuarios(termino, res);
         break;
-        case 'categorias':
+        case 'categories':
             buscarCategorias(termino, res);
         break;
-        case 'productos':
+        case 'products':
             buscarProductos(termino, res);
         break;
     

@@ -1,5 +1,4 @@
-const { Usuario, Categoria, Producto } = require('../models');
-const Role = require('../models/role');
+const { User, Category, Product, Role } = require('../models');
 
 // Verificar si el rol esta registrado
 const esRoleValido = async( rol = '' ) => {
@@ -10,8 +9,8 @@ const esRoleValido = async( rol = '' ) => {
 };
 
 // Verificar si el correo existe
-const esEmailValido = async( correo = '' ) => {
-    const existeEmail = await Usuario.findOne({ correo });
+const esEmailValido = async( email = '' ) => {
+    const existeEmail = await User.findOne({ email });
     if( existeEmail ){
         throw new Error(`El correo: ${ correo } ya esta en uso`);       
     };
@@ -19,7 +18,7 @@ const esEmailValido = async( correo = '' ) => {
 
 // Verificar si el ID existe
 const existeUsuarioPorId = async( id ) => {
-    const existeUsuarioId = await Usuario.findById( id );
+    const existeUsuarioId = await User.findById( id );
     if( !existeUsuarioId ){
         throw new Error(`El id: ${ id } no existe `);       
     };
@@ -27,7 +26,7 @@ const existeUsuarioPorId = async( id ) => {
 
 // Verificar si el ID - Categoria existe
 const existeCategoriaPorId = async( id ) => {
-    const existeCategoriaId = await Categoria.findById( id );
+    const existeCategoriaId = await Category.findById( id );
     if( !existeCategoriaId ){
         throw new Error(`El id: ${ id } no existe `);       
     };
@@ -35,7 +34,7 @@ const existeCategoriaPorId = async( id ) => {
 
 // Verificar si el ID - Producto existe
 const existeProductoPorId = async( id ) => {
-    const existeProductoId = await Producto.findById( id );
+    const existeProductoId = await Product.findById( id );
     if( !existeProductoId ){
         throw new Error(`El id: ${ id } no existe `);       
     };
