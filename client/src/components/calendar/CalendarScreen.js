@@ -7,6 +7,7 @@ import 'moment/locale/es';
 import NavbarScreen from '../ui/navbar/NavbarScreen';
 import { messages } from '../../helpers/calendar-messages-es';
 import CalendarEvent from './CalendarEvent';
+import CalendarModal from './CalendarModal';
 
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
@@ -73,6 +74,8 @@ export default function CalendarScreen() {
                     event: CalendarEvent
                 }}
             />
+
+            <CalendarModal/>
         </div>
     )
 }
