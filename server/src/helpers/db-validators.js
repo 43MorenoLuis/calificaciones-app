@@ -1,4 +1,4 @@
-const { User, Category, Product, Role } = require('../models');
+const { User, Category, Product, Role, Event } = require('../models');
 
 // Verificar si el rol esta registrado
 const esRoleValido = async( rol = '' ) => {
@@ -40,6 +40,14 @@ const existeProductoPorId = async( id ) => {
     };
 };
 
+// Verificar si el ID - Evento existe
+const existsEventForId = async( id ) => {
+    const existsEventId = await Event.findById( id );
+    if( !existsEventId ){
+        throw new Error(`El id: ${ id } no existe `);       
+    };
+};
+
 // Validar colecciones permitidas
 const coleccionesPermitidas = ( coleccion = '', colecciones = [] ) => {
     const incluida = colecciones.includes( coleccion );
@@ -56,5 +64,6 @@ module.exports = {
     existeUsuarioPorId,
     existeCategoriaPorId,
     existeProductoPorId,
+    existsEventForId,
     coleccionesPermitidas
 }

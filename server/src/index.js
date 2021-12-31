@@ -35,7 +35,8 @@ const paths = {
     auth: '/api/auth',
     categories: '/api/categories',
     products: '/api/products',
-    uploads: '/api/uploads'
+    uploads: '/api/uploads',
+    events: '/api/events'
 }
 
 app.use( paths.auth, require( './routes/auth' ) );
@@ -44,6 +45,7 @@ app.use( paths.users, require( './routes/user' ) );
 app.use( paths.categories, require( './routes/categories' ) );
 app.use( paths.products, require( './routes/products' ) );
 app.use( paths.uploads, require( './routes/uploads' ) );
+app.use( paths.events, require( './routes/events' ) );
 
 // Initial Server
 app.listen( PORT, () => {
