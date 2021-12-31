@@ -66,7 +66,8 @@ const eventPost = async( req, res = response ) => {
 const eventPut = async( req, res = response ) => {
 
     const { id } = req.params;
-    const { state, user, ...data } = req.body;
+    const { state, user, ...body } = req.body;
+    const uid = req.user._id;
 
     const event = await Event.findById( id );
 
@@ -77,32 +78,52 @@ const eventPut = async( req, res = response ) => {
         })
     }
 
-    if( event.user.toString() !== req.user._id ){
+    if( event.user.toString() !== uid ){
         return res.status(401).json({
             ok: false,
             msg: 'You cannot edit this event'
         })
     }
 
-    const data = {
+    const newEvent = {
         ...body,
         title: body.title.toUpperCase(),
         notes: body.notes.toUpperCase(),
-        user: req.user._id
+        user: uid
     }
 
-    const event = await Event.findByIdAndUpdate( id, data, { new: true } );
+    const eventUpdate = await Event.findByIdAndUpdate( id, newEvent, { new: true } );
 
-    res.json( event );
+    res.json( eventUpdate );
 }
 
 // borrarEvento - estado:false
 const eventDelete = async( req, res = response ) => {
 
     const { id } = req.params;
-    const eventDelete = await Event.findByIdAndUpdate( id, {state: false}, {new: true});
-
-    res.json( eventDelete );
+    const uid = req.user._id;
+    
+    const event = await Event.findById( id );
+    
+    if( !event ){
+        return res.status(404).json({
+            ok: false,
+            msg: 'Event does not exist for that id'
+        })
+    }
+    
+    if( event.user.toString() !== uid ){
+        return res.status(401).json({
+            ok: false,
+            msg: 'You cannot delete this event'
+        })
+    }
+    
+    await Event.findByIdAndUpdate( id, {state: false}, {new: true});
+    
+    res.json({
+        msg: 'Event delete'
+    });
 }
 
 module.exports = {
