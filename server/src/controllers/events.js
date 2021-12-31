@@ -68,9 +68,28 @@ const eventPut = async( req, res = response ) => {
     const { id } = req.params;
     const { state, user, ...data } = req.body;
 
-    data.title = data.title.toUpperCase();
-    data.notes = data.notes.toUpperCase();
-    data.user = req.user._id;
+    const event = await Event.findById( id );
+
+    if( !event ){
+        return res.status(404).json({
+            ok: false,
+            msg: 'Event does not exist for that id'
+        })
+    }
+
+    if( event.user.toString() !== req.user._id ){
+        return res.status(401).json({
+            ok: false,
+            msg: 'You cannot edit this event'
+        })
+    }
+
+    const data = {
+        ...body,
+        title: body.title.toUpperCase(),
+        notes: body.notes.toUpperCase(),
+        user: req.user._id
+    }
 
     const event = await Event.findByIdAndUpdate( id, data, { new: true } );
 
