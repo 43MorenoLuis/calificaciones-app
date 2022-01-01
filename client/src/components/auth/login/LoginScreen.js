@@ -1,20 +1,38 @@
-import React from 'react'
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { startLogin } from '../../../actions/auth';
+import { useForm } from '../../../hooks/useForm';
 
 export default function LoginScreen() {
+
+    const dispatch = useDispatch();
+
+    const [ formLoginValues, setFormLoginValues ] = useForm({
+        email: 'lmoreno9943@gmail.com',
+        password: 'Luis123456'
+    });
+
+    const { email, password } = formLoginValues;
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        dispatch( startLogin( email, password ) );
+    }
+
     return (
         <div className="container login__container">
             <div className="row">
                 <div className="col-md-6 login__form-1">
                     <h3>Ingreso</h3>
-                    <form>
+                    <form onSubmit={ handleLogin }>
                         <div className="form-group">
                             <input 
                                 type="text"
                                 className="form-control"
                                 placeholder="Correo"
-                                name="lEmail"
-                                // value={ lEmail }
-                                // onChange={ handleLoginInputChange }
+                                name="email"
+                                value={ email }
+                                onChange={ setFormLoginValues }
                             />
                         </div>
                         <div className="form-group">
@@ -22,9 +40,9 @@ export default function LoginScreen() {
                                 type="password"
                                 className="form-control"
                                 placeholder="Contraseña"
-                                name="lPassword"
-                                // value={ lPassword }
-                                // onChange={ handleLoginInputChange }
+                                name="password"
+                                value={ password }
+                                onChange={ setFormLoginValues }
                             />
                         </div>
                         <div className="form-group">
