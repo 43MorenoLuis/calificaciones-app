@@ -23,13 +23,13 @@ export default function LoginScreen() {
         <div className="container login__container">
             <div className="row">
                 <div className="col-md-6 login__form-1">
-                    <h3>Ingreso</h3>
+                    <h3>Sign in to your account</h3>
                     <form onSubmit={ handleLogin }>
                         <div className="form-group">
                             <input 
                                 type="text"
                                 className="form-control"
-                                placeholder="Correo"
+                                placeholder="Email"
                                 name="email"
                                 value={ email }
                                 onChange={ setFormLoginValues }
@@ -39,7 +39,7 @@ export default function LoginScreen() {
                             <input
                                 type="password"
                                 className="form-control"
-                                placeholder="Contraseña"
+                                placeholder="Password"
                                 name="password"
                                 value={ password }
                                 onChange={ setFormLoginValues }
@@ -49,7 +49,7 @@ export default function LoginScreen() {
                             <input 
                                 type="submit"
                                 className="btnSubmit"
-                                value="Login" 
+                                value="Sign In" 
                             />
                         </div>
                     </form>

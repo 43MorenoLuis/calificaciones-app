@@ -1,40 +1,66 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
+import { startRegister } from '../../../actions/auth';
+import { useForm } from '../../../hooks/useForm';
 
 export default function RegisterScreen() {
+
+    const dispatch = useDispatch();
+
+    const [ formRegisterValues, setFormRegisterValues ] = useForm({
+        name: 'Luis M',
+        email: 'lemoreno769@misena.edu.co',
+        password1: 'Luis123456',
+        password2: 'Luis123456',
+        rol: 'USER_ROLE'
+    });
+
+    const { name, email, password1, password2, rol } = formRegisterValues;
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+
+        if( password1 !== password2 ){
+            return Swal.fire('Error', 'Incorrect password', 'error');
+        }
+        dispatch( startRegister( name, email, password1, rol ) );
+    }
+
     return (
         <div className="container login__container">
             <div className="row">
                 <div className="col-md-6 login__form-1">
-                <h3>Registro</h3>
-                    <form>
+                <h3>Register your account</h3>
+                    <form onSubmit={ handleRegister }>
                         <div className="form-group">
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Nombre"
-                                name="rName"
-                                // value={ rName }
-                                // onChange={ handleRegisterInputChange }
+                                placeholder="Name"
+                                name="name"
+                                value={ name }
+                                onChange={ setFormRegisterValues }
                             />
                         </div>
                         <div className="form-group">
                             <input
                                 type="email"
                                 className="form-control"
-                                placeholder="Correo"
-                                name="rEmail"
-                                // value={ rEmail }
-                                // onChange={ handleRegisterInputChange }
+                                placeholder="Email"
+                                name="email"
+                                value={ email }
+                                onChange={ setFormRegisterValues }
                             />
                         </div>
                         <div className="form-group">
                             <input
                                 type="password"
                                 className="form-control"
-                                placeholder="Contraseña" 
-                                name="rPassword1"
-                                // value={ rPassword1 }
-                                // onChange={ handleRegisterInputChange }
+                                placeholder="Password" 
+                                name="password1"
+                                value={ password1 }
+                                onChange={ setFormRegisterValues }
                             />
                         </div>
 
@@ -42,10 +68,10 @@ export default function RegisterScreen() {
                             <input
                                 type="password"
                                 className="form-control"
-                                placeholder="Repita la contraseña" 
-                                name="rPassword2"
-                                // value={ rPassword2 }
-                                // onChange={ handleRegisterInputChange }
+                                placeholder="Repeat Password" 
+                                name="password2"
+                                value={ password2 }
+                                onChange={ setFormRegisterValues }
                             />
                         </div>
 
@@ -53,7 +79,7 @@ export default function RegisterScreen() {
                             <input 
                                 type="submit" 
                                 className="btnSubmit" 
-                                value="Crear cuenta" />
+                                value="Sign Up" />
                         </div>
                     </form>
                 </div>
