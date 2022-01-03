@@ -57,7 +57,7 @@ export const startChecking = () => {
             localStorage.setItem('token', body.token );
             localStorage.setItem('token-init-date', new Date().getTime() );
             
-            const { uid, name } = body.user 
+            const { uid, name } = body 
 
             dispatch( login({
                 uid,

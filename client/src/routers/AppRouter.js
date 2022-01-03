@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-    BrowserRouter as Router,
+    BrowserRouter,
     Route,
     Routes
   } from 'react-router-dom';
@@ -12,26 +12,57 @@ import RegisterScreen from '../components/auth/register/RegisterScreen';
 import CalendarScreen from '../components/calendar/CalendarScreen';
 import HomeScreen from '../components/home/HomeScreen';
 import NotFoundScreen from '../components/notFound/NotFoundScreen';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
 
 export default function AppRouter() {
 
     const dispatch = useDispatch();
+    const { checking } = useSelector( state => state.auth );
 
     useEffect(() => {
         dispatch( startChecking() );
-    }, [dispatch])
+    }, [dispatch]);
+
+    if( checking ){
+         return (<h1>Wait...</h1>)
+    }
 
     return (
-        <Router>
+        <BrowserRouter>
             <div>
                 <Routes>
-                    <Route path="/" element={ <HomeScreen/> } />
-                    <Route path="/login" element={ <LoginScreen/> } />
-                    <Route path="/register" element={ <RegisterScreen/> } />
-                    <Route path="/calendar" element={ <CalendarScreen/> } />
+                    <Route path="/login" 
+                        element={ 
+                            <PublicRoute>
+                                <LoginScreen />
+                            </PublicRoute>
+                        } 
+                    />
+                    <Route path="/*" 
+                        element={ 
+                            <PrivateRoute>
+                                <CalendarScreen/>
+                            </PrivateRoute>
+                        } 
+                    />
+                    <Route path="/register" 
+                        element={ 
+                            <PrivateRoute>
+                                <RegisterScreen/>
+                            </PrivateRoute>
+                        } 
+                    />
+                    <Route path='/home' 
+                        element={
+                            <PrivateRoute>
+                                <HomeScreen/>
+                            </PrivateRoute>
+                        }
+                    />
                     <Route exact path="*" element={ <NotFoundScreen/> } />
                 </Routes>
             </div>
-        </Router>
+        </BrowserRouter>
     )
 }
