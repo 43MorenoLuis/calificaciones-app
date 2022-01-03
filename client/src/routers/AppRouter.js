@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
     BrowserRouter as Router,
     Route,
     Routes
   } from 'react-router-dom';
+import { startChecking } from '../actions/auth';
 
 import LoginScreen from '../components/auth/login/LoginScreen';
 import RegisterScreen from '../components/auth/register/RegisterScreen';
@@ -12,6 +14,13 @@ import HomeScreen from '../components/home/HomeScreen';
 import NotFoundScreen from '../components/notFound/NotFoundScreen';
 
 export default function AppRouter() {
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch( startChecking() );
+    }, [dispatch])
+
     return (
         <Router>
             <div>
