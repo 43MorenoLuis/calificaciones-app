@@ -18,6 +18,7 @@ const eventsGet = async( req, res = response ) => {
         ]);
 
         res.json({
+            ok: true,
             total,
             events
         });
@@ -79,7 +80,10 @@ const eventPost = async( req, res = response ) => {
         // Guarda DB
         await event.save();
 
-        res.status(201).json(event);
+        res.status(201).json({
+            ok: true,
+            event
+        });
         
     } catch (error) {
         console.log(error);
@@ -125,7 +129,10 @@ const eventPut = async( req, res = response ) => {
 
         const eventUpdate = await Event.findByIdAndUpdate( id, newEvent, { new: true } );
 
-        res.json( eventUpdate );
+        res.json({
+            ok: true,
+            eventUpdate 
+        });
         
     } catch (error) {
         console.log(error);
@@ -163,6 +170,7 @@ const eventDelete = async( req, res = response ) => {
         await Event.findByIdAndUpdate( id, {state: false}, {new: true});
         
         res.json({
+            ok: true,
             msg: 'Event delete'
         });
 
