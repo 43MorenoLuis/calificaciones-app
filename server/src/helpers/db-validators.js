@@ -4,7 +4,7 @@ const { User, Category, Product, Role, Event } = require('../models');
 const esRoleValido = async( rol = '' ) => {
     const existeRol = await Role.findOne({ rol });
     if( !existeRol ){
-        throw new Error(`El rol: ${ rol } no está registrado en la DB`);
+        throw new Error(`The role ${ rol } is not registered in the DB`);
     }
 };
 
@@ -12,7 +12,7 @@ const esRoleValido = async( rol = '' ) => {
 const esEmailValido = async( email = '' ) => {
     const existeEmail = await User.findOne({ email });
     if( existeEmail ){
-        throw new Error(`El correo: ${ correo } ya esta en uso`);       
+        throw new Error(`The email ${ email } is already in use`);       
     };
 };
 
@@ -20,7 +20,7 @@ const esEmailValido = async( email = '' ) => {
 const existeUsuarioPorId = async( id ) => {
     const existeUsuarioId = await User.findById( id );
     if( !existeUsuarioId ){
-        throw new Error(`El id: ${ id } no existe `);       
+        throw new Error(`The id: ${ id } not exist`);       
     };
 };
 
@@ -28,7 +28,7 @@ const existeUsuarioPorId = async( id ) => {
 const existeCategoriaPorId = async( id ) => {
     const existeCategoriaId = await Category.findById( id );
     if( !existeCategoriaId ){
-        throw new Error(`El id: ${ id } no existe `);       
+        throw new Error(`The id: ${ id } not exist`);       
     };
 };
 
@@ -36,7 +36,7 @@ const existeCategoriaPorId = async( id ) => {
 const existeProductoPorId = async( id ) => {
     const existeProductoId = await Product.findById( id );
     if( !existeProductoId ){
-        throw new Error(`El id: ${ id } no existe `);       
+        throw new Error(`The id: ${ id } not exist`);       
     };
 };
 
@@ -44,7 +44,7 @@ const existeProductoPorId = async( id ) => {
 const existsEventForId = async( id ) => {
     const existsEventId = await Event.findById( id );
     if( !existsEventId ){
-        throw new Error(`El id: ${ id } no existe `);       
+        throw new Error(`The id: ${ id } not exist `);       
     };
 };
 
@@ -52,7 +52,7 @@ const existsEventForId = async( id ) => {
 const coleccionesPermitidas = ( coleccion = '', colecciones = [] ) => {
     const incluida = colecciones.includes( coleccion );
     if( !incluida ){
-        throw new Error(`La coleccion ${ coleccion } no es permitida, ${ colecciones }`);
+        throw new Error(`The collection ${ coleccion } is not allowed ${ colecciones }`);
     }
 
     return true;

@@ -1,8 +1,8 @@
-const bcryptjs = require('bcryptjs');
 const { response } = require('express');
 const { generateJWT } = require('../helpers/generate-jwt');
 const { googleVerify } = require('../helpers/google-verify');
 const { User } = require('../models');
+const bcryptjs = require('bcryptjs');
 
 const login = async(req, res = response ) => {
 
@@ -14,14 +14,16 @@ const login = async(req, res = response ) => {
         const user = await User.findOne({ email });
         if( !user ){
             return res.status(400).json({
-                msg: 'Usuario / Password son incorrectos'
+                ok: false,
+                msg: 'User / Password son incorrectos'
             });
         }; 
 
         // Si el usuario esta activo
         if( !user.state ){
             return res.status(400).json({
-                msg: 'Usuario / Password son incorrectos'
+                ok: false,
+                msg: 'User / Password son incorrectos'
             });
         };
 
@@ -29,7 +31,8 @@ const login = async(req, res = response ) => {
         const validPassword = bcryptjs.compareSync( password, user.password );
         if( !validPassword ){
             return res.status(400).json({
-                msg: 'Usuario / Password son incorrectos'
+                ok: false,
+                msg: 'User / Password son incorrectos'
             });
         };
 
@@ -37,6 +40,7 @@ const login = async(req, res = response ) => {
         const token = await generateJWT( user.id );
 
         res.json({
+            ok: true,
             user,
             token
         });
@@ -44,10 +48,69 @@ const login = async(req, res = response ) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
+            ok: false,
             msg: 'Hable con el administrador'
         });
     }
 };
+
+const register = async(req, res = response ) => {
+    
+    const { email, password } = req.body;
+    
+    try {
+    
+        // Verificar si el email existe
+        let user = await User.findOne({ email });
+        
+        if( user ){
+            return res.status(400).json({
+                ok: false,
+                msg: 'User exists with that email'
+            });
+        }; 
+
+        user = new User( req.body );
+
+        // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync();
+        user.password = bcryptjs.hashSync( password, salt );
+
+        // Guardar en DB
+        await user.save();
+
+        // Generar el JWT
+        const token = await generateJWT( user.id );
+
+        res.json({
+            ok:true,
+            msg: 'Successfully Registered',
+            user,
+            token
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+};
+
+const revalidateToken = async(req, res = response ) => {
+
+    const { _id: uid } = req.user;
+
+    // Generar JWT
+    const token = await generateJWT( uid );
+
+    res.json({
+        ok:true,
+        uid,
+        token
+    });
+}
 
 const googleSignIn = async( req, res = response ) => {
     
@@ -76,6 +139,7 @@ const googleSignIn = async( req, res = response ) => {
         // Si el usuario existe en DB
         if( !user.state ){
             return res.status(401).json({
+                ok: false,
                 msg: 'Hable con el administrador, usuario bloqueado'
             });
         }
@@ -84,6 +148,7 @@ const googleSignIn = async( req, res = response ) => {
         const token = await generateJWT( user.id );
 
         res.json({
+            ok: true,
             user,
             token
         });
@@ -98,5 +163,7 @@ const googleSignIn = async( req, res = response ) => {
 
 module.exports = {
     login,
+    register,
+    revalidateToken,
     googleSignIn
 };
