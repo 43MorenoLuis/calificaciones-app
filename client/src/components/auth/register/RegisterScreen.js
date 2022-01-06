@@ -9,10 +9,10 @@ export default function RegisterScreen() {
     const dispatch = useDispatch();
 
     const [ formRegisterValues, setFormRegisterValues ] = useForm({
-        name: 'Luis M',
-        email: 'lemoreno769@misena.edu.co',
-        password1: 'Luis123456',
-        password2: 'Luis123456',
+        name: '',
+        email: '',
+        password1: '',
+        password2: '',
         rol: 'USER_ROLE'
     });
 
