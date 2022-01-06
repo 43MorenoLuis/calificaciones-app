@@ -8,8 +8,8 @@ export default function LoginScreen() {
     const dispatch = useDispatch();
 
     const [ formLoginValues, setFormLoginValues ] = useForm({
-        email: 'lmoreno9943@gmail.com',
-        password: 'Luis123456'
+        email: '',
+        password: ''
     });
 
     const { email, password } = formLoginValues;
