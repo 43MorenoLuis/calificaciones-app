@@ -35,3 +35,7 @@ let users = [
         married: false
     }
 ]
+
+module.exports = {
+    users
+}
